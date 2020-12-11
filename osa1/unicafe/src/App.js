@@ -1,5 +1,23 @@
 import React, { useState } from 'react'
 
+const Button = (props) => {
+      const {handleClick, text} = props
+
+      return (
+        <button onClick={handleClick}>{text}</button>
+      )
+}
+
+const StatisticsLine = (props) => {
+        const {text, value} = props
+        
+        return (
+          <>
+            <p>{text} {value}</p>
+          </>
+        )
+}
+
 const Statistics = (props) => {
   const {good, neutral, bad, all, average, positive} = props
 
@@ -7,12 +25,12 @@ const Statistics = (props) => {
     return (
       <div>
           <h1>statistics</h1>
-          <p>good {good}</p>
-          <p>neutral {neutral}</p>
-          <p>bad {bad}</p>
-          <p>all {all}</p>
-          <p>average {average}</p>
-          <p>positive {positive} %</p>
+          <StatisticsLine text="good" value={good} />
+          <StatisticsLine text="neutral" value={neutral} />
+          <StatisticsLine text="bad" value={bad} />
+          <StatisticsLine text="all" value={all} />
+          <StatisticsLine text="average" value={average} />
+          <StatisticsLine text="positive" value={positive + "%"} />
         </div>
     )  
   } else {
@@ -35,14 +53,19 @@ const App = () => {
   const average = (good - bad)/all
   const positive = good/all * 100
 
+  const increaseGoodByOne = () => setGood(good + 1)
+  const increaseNeutralByOne = () => setNeutral(neutral + 1)
+  const increaseBadByOne = () => setBad(bad + 1)
+
 
   return (
     <div>
       <div>
         <h1>give feedback</h1>
-        <button onClick={() => setGood(good + 1)}>Good</button>
-        <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
-        <button onClick={() => setBad(bad + 1)}>Bad</button>
+        <Button handleClick={increaseGoodByOne} text ="good" />
+        <Button handleClick={increaseNeutralByOne} text="neural" />
+        <Button handleClick={increaseBadByOne} text="bad" />
+
       </div>
       <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
     </div>
