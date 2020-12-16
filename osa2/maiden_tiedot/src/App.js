@@ -10,7 +10,7 @@ const CountryInfo = ({country}) => {
       <h2>Languages</h2>
       <ul>          
         {country.languages.map((language) => 
-          <li>{language.name}</li>
+          <li key={language.iso639_1}>{language.name}</li>
         )}  
       </ul>
       <img style={{height:"150px"}} src={country.flag} alt=""/>
@@ -19,11 +19,18 @@ const CountryInfo = ({country}) => {
   )
 }
 
-const CountryList = ({countries}) => {
+const CountryShort = ({country, setFilter}) => {
+  return (
+    <p>{country.name} <button onClick={() => setFilter(country.name)}>show</button></p>
+  )
+}
+
+const CountryList = ({countries, setFilter}) => {
+
   return (
     <>
       {countries.map((country) => 
-        <p key={country.alpha2Code}>{country.name}</p>
+        <CountryShort key={country.alpha2Code} country={country} setFilter={setFilter}/>
       )}
     </>
   )
@@ -65,7 +72,7 @@ function App() {
     return (
       <div>
         <CountryFilter filter={filter} setFilter={setFilter}/>
-        <CountryList countries={filteredCountries}/>
+        <CountryList countries={filteredCountries} setFilter={setFilter}/>
       </div>
     )
   }
