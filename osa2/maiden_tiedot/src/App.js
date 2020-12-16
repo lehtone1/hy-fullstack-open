@@ -5,7 +5,7 @@ const CountryInfo = ({country}) => {
   return (
     <>
       <h1>{country.name}</h1>
-      <p>capital {country.captal}</p>
+      <p>capital {country.capital}</p>
       <p>population {country.population}</p>
       <h2>Languages</h2>
       <ul>          
@@ -14,6 +14,7 @@ const CountryInfo = ({country}) => {
         )}  
       </ul>
       <img style={{height:"150px"}} src={country.flag} alt=""/>
+      <WeatherInfo name={country.capital}/>
     </>
     
   )
@@ -44,6 +45,31 @@ const CountryFilter = ({filter, setFilter}) => {
   return (
     <p>Find counries<input value={filter} onChange={handleFilterChange}/></p>
   )
+}
+
+const WeatherInfo = ({name}) => {
+  const [weather, setWeather] = useState({})
+  const api_key = process.env.REACT_APP_API_KEY
+
+  useEffect(() => {
+    axios
+      .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${name}`)
+      .then((response) => {
+        setWeather(response.data.current)
+      })
+  }, [])
+
+  console.log(weather)
+
+  return (
+    <>
+      <h2>Weather in Helsinki</h2>
+      <p>temperature: {weather.temperature} Celcus</p>
+      <img style={{height:"100px"}} src={weather.weather_icons} alt=""/>
+      <p>wind: {weather.wind_speed} mph direction {weather.wind_dir}</p>
+    </>
+  )
+
 }
 
 function App() {
@@ -86,7 +112,9 @@ function App() {
   }
 
   return (
-    <div></div>
+    <div>
+      <CountryFilter filter={filter} setFilter={setFilter}/>
+    </div>
   )
 }
 
