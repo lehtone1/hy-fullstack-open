@@ -1,17 +1,25 @@
 import React, { useState } from 'react'
 
-const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
-  const [ newName, setNewName ] = useState('');
-  const [ newNumber, setNewNumber ] = useState('');
-  const [ nameFilter, setNameFlter ] = useState('');
+const Person = ({person}) => {
+  const {name, number} = person
+  return (
+    <p>{name} {number}</p>
+  ) 
+}
+
+const Filter = ({nameFilter, setNameFlter}) => {
+  const handleFilterChange = (event) => {
+    setNameFlter(event.target.value);
+  }
+
+  return (
+    <input value={nameFilter} onChange={handleFilterChange}/>
+  )
+  
+}
+
+const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setPersons}) => {
   const names = persons.map((person) => person.name);
-  const filteredPersons = persons.filter((person) => person.name.includes(nameFilter))
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -21,11 +29,7 @@ const App = () => {
     setNewNumber(event.target.value);
   }
 
-  const handleFilterChange = (event) => {
-    setNameFlter(event.target.value);
-  }
-
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
     if(names.includes(newName)) {
       window.alert(`${newName} is already added to phonebook`)
@@ -41,24 +45,48 @@ const App = () => {
   }
 
   return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: <input value={newName} onChange={handleNameChange}/>
+      </div>
+      <div>
+        number: <input value={newNumber} onChange={handleNumberChange}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+const App = () => {
+  const [ persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
+  const [ newName, setNewName ] = useState('');
+  const [ newNumber, setNewNumber ] = useState('');
+  const [ nameFilter, setNameFlter ] = useState('');
+  const filteredPersons = persons.filter((person) => person.name.includes(nameFilter))
+
+  return (
     <div>
       <h2>Phonebook</h2>
-      <input value={nameFilter} onChange={handleFilterChange}/>
-      <h2>Add New</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter nameFilter={nameFilter} setNameFlter={setNameFlter}/>
+      <h3>Add New Person</h3>
+      <PersonForm 
+        newName={newName}
+        setNewName={setNewName}
+        newNumber={newNumber}
+        setNewNumber={setNewNumber}
+        persons={persons}
+        setPersons={setPersons}
+      />
+      <h3>Numbers</h3>
       {filteredPersons.map((person) => 
-        <p>{person.name} {person.number}</p>
+        <Person person={person}/>
       )}
     </div>
   )
