@@ -12,10 +12,23 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
     setNewNumber(event.target.value);
   };
 
+  const updateNumber = () => {
+    const person = persons.find(p => p.name === newName);
+    const updatedPerson = {...person, number:newNumber};
+    personService.update(updatedPerson.id, updatedPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person ))
+      })
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     if(names.includes(newName)) {
-      window.alert(`${newName} is already added to phonebook`);
+      const message = `${newName} is already added to the phonebook, replace the old number with a new one?`;
+      const confirm = window.confirm(message)
+      if(confirm) {
+        updateNumber()
+      }
     } else {
       const newPerson = {
         name: newName,
