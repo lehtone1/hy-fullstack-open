@@ -4,6 +4,7 @@ import Person from './components/Person';
 import PersonForm from './components/PersonForm';
 import personServce from './services/persons'
 import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
   const [ persons, setPersons] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('');
   const [ nameFilter, setNameFlter ] = useState('');
   const [ message, setMessage ] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const filteredPersons = persons.filter((person) => person.name.includes(nameFilter))
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorMessage errorMessage={errorMessage} />
       <Filter nameFilter={nameFilter} setNameFlter={setNameFlter}/>
       <h3>Add New Person</h3>
       <PersonForm 
@@ -45,6 +48,8 @@ const App = () => {
         setPersons={setPersons}
         message={message}
         setMessage={setMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
         />
       )}
     </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import personService from '../services/persons'
 
-const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setPersons, message, setMessage}) => {
+const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setPersons, message, setMessage, errorMessage, setErrorMessage}) => {
   const names = persons.map((person) => person.name);
 
   const handleNameChange = (event) => {
@@ -18,6 +18,10 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
     personService.update(updatedPerson.id, updatedPerson)
       .then((returnedPerson) => {
         setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person ))
+      })
+      .catch((error) => {
+        const newMessage = `${person.name} was already removed from server`;
+        setErrorMessage(newMessage);
       })
   }
 
