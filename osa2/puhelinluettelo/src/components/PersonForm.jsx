@@ -21,36 +21,46 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
       })
   }
 
-  const addPerson = (event) => {
+  const clearInputs = () => {
+    setNewName('');
+    setNewNumber('');
+  }
+
+  const showNotification = (newMessage) => {
+    setMessage(newMessage)
+    setTimeout(() => {
+      setMessage(null)
+    },5000)
+  }
+
+  const addPersonToSrver = () => {
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+    personService.create(newPerson)
+      .then((createdPerson) => 
+        setPersons(persons.concat(createdPerson))
+      )
+  }
+
+  const handleFormSubmit = (event) => {
     event.preventDefault()
     if(names.includes(newName)) {
-      const newMessage = `${newName} is already added to the phonebook, replaced the old number with a new one`;
+      const newMessage = `${newName} already exists in the phonebook, number updated into new one`;
       updateNumber()
-      setMessage(newMessage)
-      setTimeout(() => {
-        setMessage(null)
-      },5000)
+      clearInputs()
+      showNotification(newMessage)
     } else {
-      const newPerson = {
-        name: newName,
-        number: newNumber,
-      };
       const newMessage = `${newName} added`
-      personService.create(newPerson)
-        .then((createdPerson) => 
-          setPersons(persons.concat(createdPerson))
-        )
-      setNewName('');
-      setNewNumber('');
-      setMessage(newMessage);
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      addPersonToSrver();
+      clearInputs();
+      showNotification(newMessage);
     }
   }
 
   return (
-    <form onSubmit={addPerson}>
+    <form onSubmit={handleFormSubmit}>
       <div>
         name: <input value={newName} onChange={handleNameChange}/>
       </div>
