@@ -2,13 +2,28 @@
   "persons": [
     {
       "name": "Dan Abramov",
-      "number": "0",
+      "number": "5",
       "id": 3
     },
     {
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "eero lehtonen",
+      "number": "5",
+      "id": 5
+    },
+    {
+      "name": "e",
+      "number": "e",
+      "id": 6
+    },
+    {
+      "name": "a",
+      "number": "3123",
+      "id": 7
     }
   ]
 }

@@ -6,7 +6,7 @@ const Filter = ({nameFilter, setNameFlter}) => {
   };
 
   return (
-    <input value={nameFilter} onChange={handleFilterChange}/>
+    <p>flter shown with<input value={nameFilter} onChange={handleFilterChange}/></p>
   )
   
 }

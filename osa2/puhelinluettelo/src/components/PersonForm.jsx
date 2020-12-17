@@ -1,7 +1,7 @@
 import React from 'react';
 import personService from '../services/persons'
 
-const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setPersons}) => {
+const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setPersons, message, setMessage}) => {
   const names = persons.map((person) => person.name);
 
   const handleNameChange = (event) => {
@@ -24,22 +24,28 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
   const addPerson = (event) => {
     event.preventDefault()
     if(names.includes(newName)) {
-      const message = `${newName} is already added to the phonebook, replace the old number with a new one?`;
-      const confirm = window.confirm(message)
-      if(confirm) {
-        updateNumber()
-      }
+      const newMessage = `${newName} is already added to the phonebook, replaced the old number with a new one`;
+      updateNumber()
+      setMessage(newMessage)
+      setTimeout(() => {
+        setMessage(null)
+      },5000)
     } else {
       const newPerson = {
         name: newName,
         number: newNumber,
       };
+      const newMessage = `${newName} added`
       personService.create(newPerson)
         .then((createdPerson) => 
           setPersons(persons.concat(createdPerson))
         )
       setNewName('');
       setNewNumber('');
+      setMessage(newMessage);
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
