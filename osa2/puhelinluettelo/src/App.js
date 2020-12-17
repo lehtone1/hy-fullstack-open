@@ -33,7 +33,7 @@ const App = () => {
       />
       <h3>Numbers</h3>
       {filteredPersons.map((person) => 
-        <Person key={person.id} person={person}/>
+        <Person key={person.id} person={person} persons={persons} setPersons={setPersons}/>
       )}
     </div>
   )
