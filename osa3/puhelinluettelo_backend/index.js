@@ -1,6 +1,7 @@
-const { response } = require('express');
 const express = require('express');
 const app = express();
+
+app.use(express.json()) 
 
 let persons = [
   { 
@@ -49,6 +50,18 @@ app.get('/info', (req, res) => {
     `<p>Phonebook has info for ${persons.length} people</p>
     <p>${now}</p>`
   )
+})
+
+const createId = () => {
+  return Math.floor(Math.random() * 1000000)
+}
+
+app.post('/api/persons', (req, res) => {
+  const person = req.body
+  person.id = createId()
+  console.log(person)
+  res.json(person)
+  persons = persons.concat(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
