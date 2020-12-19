@@ -57,11 +57,23 @@ const createId = () => {
 }
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
-  person.id = createId()
-  console.log(person)
-  res.json(person)
-  persons = persons.concat(person)
+  const body = req.body
+
+  if(!body.name || !body.number) {
+    return res.status(400).json({
+      error: "Content missing"
+    })
+  } 
+
+  const exists = persons.find((person) => person.name === body.name)
+  if(exists) {
+    return res.status(400).json({
+      error: "Name must be unique"
+    })
+  }
+  body.id = createId()
+  res.json(body)
+  persons = persons.concat(body)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
