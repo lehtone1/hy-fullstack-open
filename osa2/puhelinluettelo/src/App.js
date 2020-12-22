@@ -13,7 +13,8 @@ const App = () => {
   const [ nameFilter, setNameFlter ] = useState('');
   const [ message, setMessage ] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const filteredPersons = persons.filter((person) => person.name.includes(nameFilter))
+  console.log(persons)
+  const filteredPersons = persons? persons.filter((person) => person.name.includes(nameFilter)): []
 
   useEffect(() => {
     personServce.getAll()
