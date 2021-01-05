@@ -100,6 +100,19 @@ app.post('/api/persons', (req, res) => {
 
 })
 
+app.put('/api/persons/:id', (req, res) => {
+  const body = req.body
+  const name = { name: body.name}
+  const number = { number: body.number}
+
+
+  Person.findOneAndUpdate(name, number, { new: true})
+    .then(updatedNote => {
+      res.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
 app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   Person.findByIdAndRemove(id)
