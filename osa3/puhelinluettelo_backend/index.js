@@ -38,24 +38,20 @@ let persons = [
   }
 ]
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world!</h1>')
-})
-
 app.get('/api/persons', (req, res) => {
-  Person.find({}).then((people) => {
-    res.json(people)
-  })
+  Person.find({})
+    .then((people) => {
+      res.json(people)
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
-  console.log("-----ID-----")
-  console.log(id)
   Person.findById(id)
   .then(person => {
-    console.log("----PERSON----")
-    console.log(person)
     if(person) {
       res.json(person)
     } else {
@@ -69,15 +65,17 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.get('/info', (req, res) => {
   const now = new Date(Date.now())
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p>
-    <p>${now}</p>`
-  )
+  Person.find({})
+    .then((people) => {
+      res.send(
+        `<p>Phonebook has info for ${people.length} people</p>
+        <p>${now}</p>`
+      )
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
-
-const createId = () => {
-  return Math.floor(Math.random() * 1000000)
-}
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
