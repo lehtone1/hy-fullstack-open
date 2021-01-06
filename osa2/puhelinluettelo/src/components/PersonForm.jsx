@@ -37,15 +37,29 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
     },5000)
   }
 
+  const showErrorMessage = (newMessage) => {
+    setErrorMessage(newMessage)
+    setTimeout(() => {
+      setErrorMessage(null)
+    },5000)
+  }
+
   const addPersonToSrver = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
     };
     personService.create(newPerson)
-      .then((createdPerson) => 
+      .then((createdPerson) => {
+        console.log(createdPerson)
         setPersons(persons.concat(createdPerson))
-      )
+        const newMessage = `${newName} added`;
+        showNotification(newMessage);
+      })
+      .catch(error => {
+        const newMessage = `${error.response.data.error}`
+        showErrorMessage(newMessage)
+      })
   }
 
   const handleFormSubmit = (event) => {
@@ -56,10 +70,9 @@ const PersonForm = ({newName, setNewName, newNumber, setNewNumber, persons, setP
       clearInputs()
       showNotification(newMessage)
     } else {
-      const newMessage = `${newName} added`
       addPersonToSrver();
       clearInputs();
-      showNotification(newMessage);
+      
     }
   }
 

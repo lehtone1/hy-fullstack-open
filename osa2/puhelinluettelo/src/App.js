@@ -12,8 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('');
   const [ nameFilter, setNameFlter ] = useState('');
   const [ message, setMessage ] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  console.log(persons)
+  const [ errorMessage, setErrorMessage ] = useState('');
   const filteredPersons = persons? persons.filter((person) => person.name.includes(nameFilter)): []
 
   useEffect(() => {
@@ -39,6 +38,8 @@ const App = () => {
         setPersons={setPersons}
         message={message}
         setMessage={setMessage}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
       />
       <h3>Numbers</h3>
       {filteredPersons.map((person) => 
