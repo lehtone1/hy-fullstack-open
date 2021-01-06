@@ -1,6 +1,6 @@
 require('dotenv').config()
-const express = require('express');
-const morgan = require('morgan');
+const express = require('express')
+const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./modules/person')
 
@@ -8,14 +8,14 @@ morgan.token('body', function getBody (req) {
   return JSON.stringify(req.body)
 })
 
-const app = express();
+const app = express()
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body :method'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body :method'))
 app.use(cors())
 app.use(express.static('build'))
-app.use(express.json());
+app.use(express.json())
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then((people) => {
       res.json(people)
@@ -28,19 +28,19 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   Person.findById(id)
-  .then(person => {
-    if(person) {
-      res.json(person)
-    } else {
-      res.status(404).end()
-    }
-  })
-  .catch((error) => {
-    next(error)
-  })
+    .then(person => {
+      if(person) {
+        res.json(person)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   const now = new Date(Date.now())
   Person.find({})
     .then((people) => {
@@ -59,7 +59,7 @@ app.post('/api/persons', (req, res, next) => {
 
   if(!body.name || !body.number) {
     return res.status(400).json({
-      error: "Content missing"
+      error: 'Content missing'
     })
   }
 
@@ -71,12 +71,12 @@ app.post('/api/persons', (req, res, next) => {
   person.save().then(savedNote => {
     res.json(savedNote)  
   })
-  .catch((error) => {
-    next(error)
-  })
+    .catch((error) => {
+      next(error)
+    })
 })
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
   const name = { name: body.name}
   const number = { number: body.number}
@@ -92,7 +92,7 @@ app.put('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   Person.findByIdAndRemove(id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch((error) => {
@@ -100,13 +100,13 @@ app.delete('/api/persons/:id', (req, res, next) => {
     })
 })
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
 const unknownEndpoint = (req, res) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+  res.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)

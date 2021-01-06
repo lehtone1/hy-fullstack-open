@@ -1,17 +1,17 @@
-require("dotenv").config();
+require('dotenv').config()
 
-const mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator');
-const url = process.env.MONGODB_URL;
+const mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator')
+const url = process.env.MONGODB_URL
 
-console.log("Connecting to", url)
+console.log('Connecting to', url)
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
-.then(response => {
-  console.log("Connected to MangoDB")
-})
-.catch(error => {
-  console.log("Error connecting to MangoDB: ", error)
-})
+  .then(() => {
+    console.log('Connected to MangoDB')
+  })
+  .catch(error => {
+    console.log('Error connecting to MangoDB: ', error)
+  })
 
 const personSchema = new mongoose.Schema({
   name: {
@@ -24,7 +24,7 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
   }
 })
-personSchema.plugin(uniqueValidator);
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
