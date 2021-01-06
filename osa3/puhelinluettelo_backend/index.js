@@ -15,29 +15,6 @@ app.use(cors())
 app.use(express.static('build'))
 app.use(express.json());
 
-let persons = [
-  { 
-    "name": "Arto Hellas", 
-    "number": "040-123456",
-    "id": 1
-  },
-  { 
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  { 
-    "name": "Dan Abramov", 
-    "number": "12-43-234345",
-    "id": 3
-  },
-  { 
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122",
-    "id": 4
-  }
-]
-
 app.get('/api/persons', (req, res) => {
   Person.find({})
     .then((people) => {
@@ -77,25 +54,26 @@ app.get('/info', (req, res) => {
     })
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if(!body.name || !body.number) {
     return res.status(400).json({
       error: "Content missing"
     })
-  } 
+  }
 
   const person = new Person({
     name: body.name,
     number: body.number
   })
-  
+
   person.save().then(savedNote => {
     res.json(savedNote)  
   })
-  
-
+  .catch((error) => {
+    next(error)
+  })
 })
 
 app.put('/api/persons/:id', (req, res) => {
@@ -134,10 +112,11 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-  console.log(error.message)
 
   if(error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id'})
+  } else if(error.name === 'ValidationError') {
+    return res.status(400).send({error: error.message})
   }
 
   next(error)
