@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
-const config = require('./util/config')
+const config = require('./utils/config')
 
 const app = express()
 
