@@ -10,6 +10,14 @@ const totalLikes = (blogs) => {
   return result
 }
 
+const favoriteBlog = (blogs) => {
+  const reducer = (favorite, item) => {
+    return item.likes > favorite.likes || favorite.likes === undefined? item: favorite
+  }
+  const result = blogs.reduce(reducer, {})
+  return result
+}
+
 module.exports = {
-  dummy, totalLikes
+  dummy, totalLikes, favoriteBlog
 }
