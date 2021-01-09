@@ -1,49 +1,25 @@
 const listHelper = require('../utils/list_helper')
-const Blog = require('../models/blog')
+const testingMaterial = require('./testing_material')
 
 describe('totalLikes', () => {
   test('of 1 post is the likes of the post', () => {
-    const blog = Blog({
-      "title": "My mind",
-      "author": "Eero Lehtonen",
-      "url": "unknown",
-      "likes": 3
-    })
-    const blogList = [blog]
-    const result = listHelper.totalLikes(blogList)
-    expect(result).toBe(3)
+    const blogs = testingMaterial.blogs1
+    const result = listHelper.totalLikes(blogs)
+    expect(result).toBe(7)
   
   })
   
   test('of several posts is the sum of likes', () => {
-    const blog1 = Blog({
-      "title": "My mind",
-      "author": "Eero Lehtonen",
-      "url": "unknown",
-      "likes": 3
-    })
-    const blog2 = Blog({
-      "title": "My mind",
-      "author": "Eero Lehtonen",
-      "url": "unknown",
-      "likes": 6
-    })
-    const blog3 = Blog({
-      "title": "My mind",
-      "author": "Eero Lehtonen",
-      "url": "unknown",
-      "likes": 1
-    })
-    const blogList = [blog1 ,blog2, blog3]
-    const result = listHelper.totalLikes(blogList)
-    expect(result).toBe(10)
+    const blogs = testingMaterial.blogs2
+    const result = listHelper.totalLikes(blogs)
+    expect(result).toBe(36)
   
   })
   
   test('of 0 posts is 0', () => {
-    const blogList = []
-    const result = listHelper.totalLikes(blogList)
-    expect(result).toBe(0)
+    const blogs = testingMaterial.blogs3
+    const result = listHelper.totalLikes(blogs)
+    expect(result).toBe(undefined)
   
   })
 })
