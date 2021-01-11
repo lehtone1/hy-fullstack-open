@@ -35,6 +35,21 @@ test('adding a blog increases the number of blogs by 1', async () => {
   expect(currentBlogs.body.length - initialBlogs.body.length).toBe(1)
 })
 
+test('the system atomatically adds 0 for the value of likes field if the field is missing', async () => {
+  const newBlog = {
+    title: "React tactics",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/"
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+
+  const blogs = await api.get('/api/blogs')
+  const addedBlog = blogs.body.find(blog => blog.title === "React tactics")
+  expect(addedBlog.likes).toBe(0)
+})
+
 afterAll(() => {
   mognoose.connection.close()
 })
