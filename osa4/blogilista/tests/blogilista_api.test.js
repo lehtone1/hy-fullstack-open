@@ -1,8 +1,18 @@
 const mognoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-
 const api = supertest(app)
+const Blog = require('../models/blog')
+const testingMaterial = require('./testing_material')
+
+beforeEach(async () => {
+  Blog.deleteMany()
+  let blog = new Blog(testingMaterial.blogs2[0])
+  await blog.save()
+  blog = new Blog(testingMaterial.blogs2[1])
+  await blog.save()
+  
+})
 
 test('blogs are returned as json', async () => {
   await api
@@ -20,12 +30,12 @@ test('the field identifying a blog should be named id', async () => {
 
 test('adding a blog increases the number of blogs by 1', async () => {
   const initialBlogs = await api.get('/api/blogs')
-  const newBlog = {
+  const newBlog = Blog({
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7
-  }
+  })
   await api
     .post('/api/blogs')
     .send(newBlog)
@@ -36,11 +46,11 @@ test('adding a blog increases the number of blogs by 1', async () => {
 })
 
 test('the system atomatically adds 0 for the value of likes field if the field is missing', async () => {
-  const newBlog = {
+  const newBlog = Blog({
     title: "React tactics",
     author: "Michael Chan",
     url: "https://reactpatterns.com/"
-  }
+  })
   await api
     .post('/api/blogs')
     .send(newBlog)
