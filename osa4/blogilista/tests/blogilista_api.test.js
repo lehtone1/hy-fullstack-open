@@ -11,6 +11,13 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+test('the field identifying a blog should be named id', async () => {
+  const result = await api.get('/api/blogs')
+  result.body.forEach(blog => {
+    expect(blog.id).toBeDefined()
+  });
+})
+
 afterAll(() => {
   mognoose.connection.close()
 })
