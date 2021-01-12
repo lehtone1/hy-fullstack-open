@@ -4,7 +4,7 @@ const testingMaterial = require('./testing_material')
 
 describe('favoriteBlog', () => {
   test('of list of 1 blog is the blog', () => {
-    const blogs = testingMaterial.blogs1
+    const blogs = [testingMaterial.initialBlogs[0]]
     const mostBlogs = listHelper.mostBlogs(blogs)
     const correctAnswer = {
       author: "Michael Chan",
@@ -14,7 +14,7 @@ describe('favoriteBlog', () => {
   })
 
   test('of list of several blogs is the one with most lkes', () => {
-    const blogs = testingMaterial.blogs2
+    const blogs = testingMaterial.initialBlogs
     const mostBlogs = listHelper.mostBlogs(blogs)
     const correctAnswer = {
       author: "Robert C. Martin",
@@ -24,7 +24,7 @@ describe('favoriteBlog', () => {
   })
 
   test('of empty blog list is undefined', () => {
-    const blogs = testingMaterial.blogs3
+    const blogs = []
     const mostBlogs = listHelper.mostBlogs(blogs)
     expect(mostBlogs).toEqual(undefined)
   })

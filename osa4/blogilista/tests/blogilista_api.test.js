@@ -7,13 +7,20 @@ const testingMaterial = require('./testing_material')
 
 beforeEach(async () => {
   await Blog.deleteMany()
-  let blog = new Blog(testingMaterial.blogs2[0])
-  console.log('save1')
+  let blog = new Blog(testingMaterial.initialBlogs[0])
   await blog.save()
-  blog = new Blog(testingMaterial.blogs2[1])
-  console.log('save2')
+  blog = new Blog(testingMaterial.initialBlogs[1])
   await blog.save()
 
+})
+
+test('testing database has the correct items', async () => {
+  const result = await api.get('/api/blogs')
+  
+  const titlesGet = result.body.map(blog => blog.title)
+  const titlesInitial = [testingMaterial.initialBlogs[0].title, testingMaterial.initialBlogs[1].title]
+
+  expect(titlesGet).toEqual(titlesInitial)
 })
 
 test('blogs are returned as json', async () => {
