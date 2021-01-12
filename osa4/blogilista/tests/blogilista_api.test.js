@@ -93,6 +93,19 @@ describe('Initial database', () => {
         .expect(400)
     })
   })
+
+  describe('Deleting a blog', () => {
+
+    test('decreases the number of blogs by 1', async () => {
+      const initialBlogs = await api.get('/api/blogs')
+      console.log(initialBlogs.body[0])
+      await api
+        .delete(`/api/blogs/${initialBlogs.body[0].id}`)
+        .expect(203)
+      const blogsAfterDeletion = await api.get('/api/blogs')
+      expect(blogsAfterDeletion.body.length).toBe(initialBlogs.body.length - 1)
+    })
+  })
 })
 
 
