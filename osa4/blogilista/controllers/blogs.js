@@ -2,7 +2,6 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 
 blogRouter.get('/', (request, response) => {
-  console.log('Blog', Blog)
   Blog
     .find({})
     .then(blogs => {
@@ -12,9 +11,14 @@ blogRouter.get('/', (request, response) => {
 
 blogRouter.post('/', (request, response) => {
   const body = request.body
-  if(body.likes === undefined) {
+  if (body.title === undefined || body.author === undefined) {
+    return response.status(400).json({
+      error: 'Content missing'
+    })
+  } else if (body.likes === undefined) {
     body.likes = 0
   }
+
   const blog = new Blog(body)
 
   blog
