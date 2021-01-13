@@ -40,7 +40,7 @@ describe('Initial database', () => {
     test('increases the number of blogs by 1', async () => {
       const initialBlogs = await api.get('/api/blogs')
       const newBlog = {
-        title: "React patterns",
+        title: "React tactics",
         author: "Michael Chan",
         url: "https://reactpatterns.com/",
         likes: 7
@@ -98,31 +98,37 @@ describe('Initial database', () => {
 
     test('decreases the number of blogs by 1', async () => {
       const initialBlogs = await api.get('/api/blogs')
-      console.log(initialBlogs.body[0])
+      // console.log(initialBlogs.body)
       await api
         .delete(`/api/blogs/${initialBlogs.body[0].id}`)
         .expect(203)
+
       const blogsAfterDeletion = await api.get('/api/blogs')
-      expect(blogsAfterDeletion.body.length).toBe(initialBlogs.body.length - 1)
+      // console.log(blogsAfterDeletion.body)
+      expect(blogsAfterDeletion.body).toHaveLength(initialBlogs.body.length - 1)
+    })
+  })
+
+  describe('Updating a blog', () => {
+
+    test('can change blog likes', async () => {
+      const initialBlogs = await api.get('/api/blogs')
+      let changedBlog = initialBlogs.body[0]
+      changedBlog.likes = 10
+      console.log(changedBlog)
+
+      await api
+        .put(`/api/blogs/${changedBlog.id}`)
+        .send(changedBlog)
+        .expect(200)
+
+      const updatedBlogs = await api.get('/api/blogs')
+      blog = updatedBlogs.body.find(blog => blog.id === changedBlog.id)
+      expect(blog.likes).toBe(10)
+
     })
   })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 afterAll(() => {
   mognoose.connection.close()
