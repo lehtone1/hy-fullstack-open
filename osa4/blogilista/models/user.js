@@ -1,7 +1,10 @@
 const mognoose = require('mongoose')
 
 const userScema = mognoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    minlength: 3
+  },
   name: String,
   passwordHash: String 
 })
