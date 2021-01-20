@@ -5,5 +5,5 @@ const MONGODB_URL = NODE_ENV === 'test'? process.env.TEST_MONGODB_URL:process.en
 const PORT = process.env.PORT
 
 module.exports = {
-  MONGODB_URL, PORT
+  MONGODB_URL, PORT, NODE_ENV
 }

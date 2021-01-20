@@ -3,22 +3,27 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const testingMaterial = require('./testing_material')
+const helper = require('./test_helper')
+
 
 describe('Initial database', () => {
   beforeEach(async () => {
     await Blog.deleteMany()
-    const blogs = testingMaterial.initialBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogs.map(blog => blog.save())
-    await Promise.all(promiseArray)
-  
+    await Blog.insertMany(helper.initialBlogs)
   })
 
   test('has the correct items', async () => {
-    const result = await api.get('/api/blogs')
-    const resultTitles = result.body.map(blog => blog.title)
-    const initialTitles = testingMaterial.initialBlogs.map(blog => blog.title)
-    expect(resultTitles).toEqual(initialTitles)
+    const blogs = await helper.blogsInDB()
+    const blogTitles = blogs.map(blog => {
+      // console.log(blog.title)
+      return blog.title
+    })
+    // console.log('next')
+    // console.log(blogTitles)
+    const initialTitles = helper.initialBlogs.map(blog => blog.title)
+    // console.log(blogTitles)
+    // console.log(initialTitles)
+    expect(blogTitles).toEqual(initialTitles)
   })
 
   test('returns blogs as json', async () => {
@@ -29,16 +34,14 @@ describe('Initial database', () => {
   })
 
   test('blogs where the identifying field is id', async () => {
-    const result = await api.get('/api/blogs')
-    result.body.forEach(blog => {
-      //console.log(blog)
+    const blogs = await helper.blogsInDB()
+    blogs.forEach(blog => {
       expect(blog.id).toBeDefined()
     });
   })
 
   describe("Adding a new blog", () => {
     test('increases the number of blogs by 1', async () => {
-      const initialBlogs = await api.get('/api/blogs')
       const newBlog = {
         title: "React tactics",
         author: "Michael Chan",
@@ -50,8 +53,9 @@ describe('Initial database', () => {
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
-      const currentBlogs = await api.get('/api/blogs')
-      expect(currentBlogs.body.length - initialBlogs.body.length).toBe(1)
+
+      const blogs = await helper.blogsInDB()
+      expect(blogs).toHaveLength(helper.initialBlogs.length  + 1)
     })
 
     test('where like field is missing adds it with value 0', async () => {
@@ -64,8 +68,8 @@ describe('Initial database', () => {
         .post('/api/blogs')
         .send(newBlog)
     
-      const blogs = await api.get('/api/blogs')
-      const addedBlog = blogs.body.find(blog => blog.title === "React tactics")
+      const blogs = await helper.blogsInDB()
+      const addedBlog = blogs.find(blog => blog.title === "React tactics")
       expect(addedBlog.likes).toBe(0)
     })
 
@@ -97,39 +101,40 @@ describe('Initial database', () => {
   describe('Deleting a blog', () => {
 
     test('decreases the number of blogs by 1', async () => {
-      const initialBlogs = await api.get('/api/blogs')
-      // console.log(initialBlogs.body)
+      const blogs = await helper.blogsInDB()
       await api
-        .delete(`/api/blogs/${initialBlogs.body[0].id}`)
+        .delete(`/api/blogs/${blogs[0].id}`)
         .expect(203)
 
-      const blogsAfterDeletion = await api.get('/api/blogs')
-      // console.log(blogsAfterDeletion.body)
-      expect(blogsAfterDeletion.body).toHaveLength(initialBlogs.body.length - 1)
+      const blogsAfterDeletion = await helper.blogsInDB()
+      // console.log(helper.initialBlogs.length)
+      // console.log(blogs.length)
+      // console.log(blogsAfterDeletion.length)
+      expect(blogsAfterDeletion).toHaveLength(blogs.length - 1)
     })
   })
 
   describe('Updating a blog', () => {
 
     test('can change blog likes', async () => {
-      const initialBlogs = await api.get('/api/blogs')
-      let changedBlog = initialBlogs.body[0]
-      changedBlog.likes = 10
-      console.log(changedBlog)
+      const blogs = await helper.blogsInDB()
+      const blogToUpdate = blogs[0]
+      blogToUpdate.likes = 10
 
       await api
-        .put(`/api/blogs/${changedBlog.id}`)
-        .send(changedBlog)
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
         .expect(200)
 
-      const updatedBlogs = await api.get('/api/blogs')
-      blog = updatedBlogs.body.find(blog => blog.id === changedBlog.id)
-      expect(blog.likes).toBe(10)
+      const updatedBlogs = await helper.blogsInDB()
+      const updatedBlog = updatedBlogs.find(blog => blog.id === blogToUpdate.id)
+      expect(updatedBlog.likes).toBe(blogToUpdate.likes)
 
     })
   })
+
+  afterAll(async () => {
+    await mognoose.connection.close()
+  })
 })
 
-afterAll(() => {
-  mognoose.connection.close()
-})
