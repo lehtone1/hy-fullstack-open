@@ -1,21 +1,22 @@
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
+const helper = require('./test_helper')
 
 describe('users', () => {
 
   beforeEach(async () => {
     await User.deleteMany()
-
-    const password = bcrypt.hash('sekreet', 10)
+    const password = await bcrypt.hash('sekreet', 10)
     const user = new User({
       username: 'leero11',
       name: 'Eero Lehtoneen',
       password: password
     })
-    user.save()
+    await user.save()
   }) 
 
   test('database returns json', async () => {
@@ -26,8 +27,8 @@ describe('users', () => {
   })
 
   test('after initialization db has 1 user', async () => {
-    const users = await api.get('/api/users')
-    expect(users.body).toHaveLength(1)
+    const users = await helper.usersInDB()
+    expect(users).toHaveLength(1)
   })
 
   describe('adding a new user', () => {
@@ -44,9 +45,9 @@ describe('users', () => {
         .send(newUser)
         .expect(200)
         
-      const users = await api.get('/api/users')
+      const users = await helper.usersInDB()
 
-      expect(users.body).toHaveLength(2)
+      expect(users).toHaveLength(2)
     })
 
     test('fails if username less than three characters', async () => {
@@ -61,9 +62,9 @@ describe('users', () => {
         .send(newUser)
         .expect(400)
 
-      const users = await api.get('/api/users')
+      const users = await helper.usersInDB()
 
-      expect(users.body).toHaveLength(1)
+      expect(users).toHaveLength(1)
     })
 
     test('fails if password less than three characters', async () => {
@@ -78,10 +79,9 @@ describe('users', () => {
         .send(newUser)
         .expect(400)
 
-      const users = await api.get('/api/users')
+      const users = await helper.usersInDB()
 
-      expect(users.body).toHaveLength(1)
+      expect(users).toHaveLength(1)
     })
   })
 })
-

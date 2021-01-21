@@ -1,4 +1,4 @@
-const mognoose = require('mongoose')
+const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
@@ -7,23 +7,9 @@ const helper = require('./test_helper')
 
 
 describe('Initial database', () => {
-  beforeEach(async () => {
+  beforeEach( async () => {
     await Blog.deleteMany()
     await Blog.insertMany(helper.initialBlogs)
-  })
-
-  test('has the correct items', async () => {
-    const blogs = await helper.blogsInDB()
-    const blogTitles = blogs.map(blog => {
-      // console.log(blog.title)
-      return blog.title
-    })
-    // console.log('next')
-    // console.log(blogTitles)
-    const initialTitles = helper.initialBlogs.map(blog => blog.title)
-    // console.log(blogTitles)
-    // console.log(initialTitles)
-    expect(blogTitles).toEqual(initialTitles)
   })
 
   test('returns blogs as json', async () => {
@@ -32,6 +18,16 @@ describe('Initial database', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
+  
+
+  test('has the correct items', async () => {
+    const blogs = await helper.blogsInDB()
+    const blogTitles = blogs.map(blog => {
+      return blog.title
+    })
+    const initialTitles = helper.initialBlogs.map(blog => blog.title)
+    expect(blogTitles).toEqual(initialTitles)
+  })
 
   test('blogs where the identifying field is id', async () => {
     const blogs = await helper.blogsInDB()
@@ -39,6 +35,8 @@ describe('Initial database', () => {
       expect(blog.id).toBeDefined()
     });
   })
+
+  
 
   describe("Adding a new blog", () => {
     test('increases the number of blogs by 1', async () => {
@@ -57,6 +55,7 @@ describe('Initial database', () => {
       const blogs = await helper.blogsInDB()
       expect(blogs).toHaveLength(helper.initialBlogs.length  + 1)
     })
+  
 
     test('where like field is missing adds it with value 0', async () => {
       const newBlog = {
@@ -85,6 +84,8 @@ describe('Initial database', () => {
         .expect(400)
     })
 
+  
+
     test('without author returns status code 400', async () => {
       const newBlog = {
         title: "React tactics",
@@ -97,6 +98,7 @@ describe('Initial database', () => {
         .expect(400)
     })
   })
+  
 
   describe('Deleting a blog', () => {
 
@@ -107,9 +109,6 @@ describe('Initial database', () => {
         .expect(203)
 
       const blogsAfterDeletion = await helper.blogsInDB()
-      // console.log(helper.initialBlogs.length)
-      // console.log(blogs.length)
-      // console.log(blogsAfterDeletion.length)
       expect(blogsAfterDeletion).toHaveLength(blogs.length - 1)
     })
   })
@@ -133,8 +132,14 @@ describe('Initial database', () => {
     })
   })
 
-  afterAll(async () => {
-    await mognoose.connection.close()
+  beforeAll(done => {
+    done()
+  })
+  
+  afterAll(async (done) => {
+    await mongoose.connection.close()
+    done()
   })
 })
+
 
