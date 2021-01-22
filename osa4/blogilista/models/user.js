@@ -6,7 +6,11 @@ const userScema = mognoose.Schema({
     minlength: 3
   },
   name: String,
-  passwordHash: String 
+  passwordHash: String,
+  blogs: {
+    type: mognoose.Schema.Types.ObjectId,
+    ref: 'Blog'
+  }
 })
 
 userScema.set('toJSON', {
