@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "My mind",
-  "author": "Eero Lehtonen",
+  "title": "Aino's Mind",
+  "author": "Aito Piirtola",
   "url": "unknown",
   "likes": 0
 }

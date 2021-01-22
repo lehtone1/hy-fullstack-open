@@ -44,6 +44,7 @@ describe('Initial database', () => {
         title: "React tactics",
         author: "Michael Chan",
         url: "https://reactpatterns.com/",
+        user: "6006fec184e8af12375c8327",
         likes: 7
       }
       await api
@@ -61,6 +62,7 @@ describe('Initial database', () => {
       const newBlog = {
         title: "React tactics",
         author: "Michael Chan",
+        user: "6006fec184e8af12375c8327",
         url: "https://reactpatterns.com/"
       }
       await api
@@ -71,6 +73,23 @@ describe('Initial database', () => {
       const addedBlog = blogs.find(blog => blog.title === "React tactics")
       expect(addedBlog.likes).toBe(0)
     })
+
+    test('where user field is missing adds a custom user', async () => {
+      const newBlog = {
+        title: "React tactics",
+        author: "Michael Chan",
+        url: "https://reactpatterns.com/",
+        likes: 0
+      }
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+    
+      const blogs = await helper.blogsInDB()
+      const addedBlog = blogs.find(blog => blog.title === "React tactics")
+      expect(addedBlog.user).not.toBe(undefined)
+    })
+
 
     test('without title returns status code 400', async () => {
       const newBlog = {
