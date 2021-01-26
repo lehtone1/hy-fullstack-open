@@ -13,6 +13,12 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
+    const userJson = window.localStorage.getItem('loggedUser')
+    if(userJson) {
+      const user = JSON.parse(userJson)
+      setUser(user)
+
+    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -21,6 +27,8 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
+      const userJson = JSON.stringify(user)
+      window.localStorage.setItem('loggedUser', userJson)
       setUser(user)
       setUsername("")
       setPassword("")
@@ -30,6 +38,13 @@ const App = () => {
     }
     console.log(username)
     console.log(password)
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    setUsername("")
+    setPassword("")
+    window.localStorage.removeItem('loggedUser')
   }
 
   const loginForm = () => {
@@ -65,7 +80,7 @@ const App = () => {
     return (
       <>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
