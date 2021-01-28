@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import blogService from '../../services/blogs'
 
 
 const Blog = ({ blog }) => {
@@ -13,6 +14,11 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => {
     setVisibility(!visibility)
+  }
+
+  const addLike = () => {
+    blog.likes += 1
+    blogService.update(blog)
   }
 
   const showWhenVisible = {display: visibility? "": "none"}
@@ -30,6 +36,7 @@ const Blog = ({ blog }) => {
       </div>
       <div style={showWhenVisible}>
         {blog.likes}
+        <button onClick={addLike}>Like</button>
       </div>
       <div style={showWhenVisible}>
         {blog.user.name}
