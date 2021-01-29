@@ -1,13 +1,13 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
 const Login = ({
   user,
-  setUser}) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  setUser }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -19,11 +19,11 @@ const Login = ({
       blogService.setToken(user.token)
       window.localStorage.setItem('loggedUser', userJson)
       setUser(user)
-      setUsername("")
-      setPassword("")
-    } 
-    catch {
-      console.log("Wrong username or password")
+      setUsername('')
+      setPassword('')
+    }
+    catch(error) {
+      console.log('Wrong username or password')
     }
     console.log(username)
     console.log(password)
@@ -31,42 +31,42 @@ const Login = ({
 
   const handleLogout = () => {
     setUser(null)
-    setUsername("")
-    setPassword("")
+    setUsername('')
+    setPassword('')
     window.localStorage.removeItem('loggedUser')
   }
 
   return (
-  <>
-  {
-    Object.keys(user).length > 0?
-      <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>:
-      <>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          Username
-          <input 
-          type="text"
-          name="Username"
-          value={username}
-          onChange={({target}) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          Password
-          <input 
-          type="password"
-          name="Password"
-          value={password}
-          onChange={({target}) => setPassword(target.value)}
-          />
-          </div>
-          <button type="submit">Login</button>
-      </form>
-      </>
-  }
-  </>
+    <>
+      {
+        Object.keys(user).length > 0?
+          <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>:
+          <>
+            <h2>Login</h2>
+            <form onSubmit={handleLogin}>
+              <div>
+                Username
+                <input
+                  type="text"
+                  name="Username"
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+              </div>
+              <div>
+                Password
+                <input
+                  type="password"
+                  name="Password"
+                  value={password}
+                  onChange={({ target }) => setPassword(target.value)}
+                />
+              </div>
+              <button type="submit">Login</button>
+            </form>
+          </>
+      }
+    </>
   )
 }
 

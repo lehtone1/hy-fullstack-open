@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import blogService from '../../services/blogs'
 import PropTypes from 'prop-types'
 
@@ -19,11 +19,11 @@ const Blog = ({ blog }) => {
 
   const addLike = async () => {
     blog.likes += 1
-    const updatedBlog = await blogService.update(blog)
+    await blogService.update(blog)
   }
 
-  const showWhenVisible = {display: visibility? "": "none"}
-  const hideWhenVisible = {display: visibility? "none": ""}
+  const showWhenVisible = { display: visibility? '': 'none' }
+  const hideWhenVisible = { display: visibility? 'none': '' }
 
   return (
     <div style = {blogStyle}>
