@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import blogService from '../../services/blogs'
+import PropTypes from 'prop-types'
 
 
 const Blog = ({ blog }) => {
@@ -16,9 +17,9 @@ const Blog = ({ blog }) => {
     setVisibility(!visibility)
   }
 
-  const addLike = () => {
+  const addLike = async () => {
     blog.likes += 1
-    blogService.update(blog)
+    const updatedBlog = await blogService.update(blog)
   }
 
   const showWhenVisible = {display: visibility? "": "none"}
@@ -43,6 +44,10 @@ const Blog = ({ blog }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

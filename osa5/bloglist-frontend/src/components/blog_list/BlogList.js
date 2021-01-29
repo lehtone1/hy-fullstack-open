@@ -8,9 +8,11 @@ const BlogList = () => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    const fetchData = async () => {
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+    }
+    fetchData()
   })
 
   return (

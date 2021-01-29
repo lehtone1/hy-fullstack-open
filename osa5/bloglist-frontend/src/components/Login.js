@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Login = ({
   user,
@@ -38,7 +39,7 @@ const Login = ({
   return (
   <>
   {
-    user?
+    Object.keys(user).length > 0?
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>:
       <>
       <h2>Login</h2>
@@ -69,4 +70,8 @@ const Login = ({
   )
 }
 
+Login.propTypes = {
+  user: PropTypes.object.isRequired,
+  setUser: PropTypes.func.isRequired
+}
 export default Login

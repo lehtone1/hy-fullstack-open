@@ -4,7 +4,7 @@ import Login from './components/Login'
 import blogService from './services/blogs'
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     const userJson = window.localStorage.getItem('loggedUser')
@@ -17,14 +17,14 @@ const App = () => {
 
   return (
     <div>
-      <Login 
+      <Login
         user={user}
         setUser={setUser}
       />
       {
-        user?
-          <BlogList 
-          user={user}
+        Object.keys(user).length > 0?
+          <BlogList
+            user={user}
           />
           :
           <></>
