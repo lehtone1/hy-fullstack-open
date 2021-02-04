@@ -21,27 +21,31 @@ const Blog = ({ blog }) => {
     blog.likes += 1
     await blogService.update(blog)
   }
-
-  const showWhenVisible = { display: visibility? '': 'none' }
-  const hideWhenVisible = { display: visibility? 'none': '' }
+  const buttonText = visibility? 'Hide': 'View'
 
   return (
     <div style = {blogStyle}>
       <div>
         {blog.title}  {blog.author}
-        <button style={hideWhenVisible} onClick={toggleVisibility}>View</button>
-        <button style={showWhenVisible} onClick={toggleVisibility}>Hide</button>
+        <button onClick={toggleVisibility}>{buttonText}</button>
       </div>
-      <div style={showWhenVisible}>
-        {blog.url}
-      </div>
-      <div style={showWhenVisible}>
-        {blog.likes}
-        <button onClick={addLike}>Like</button>
-      </div>
-      <div style={showWhenVisible}>
-        {blog.user.name}
-      </div>
+      {
+        visibility?
+          <>
+            <div>
+              {blog.url}
+            </div>
+            <div>
+              {blog.likes}
+              <button onClick={addLike}>Like</button>
+            </div>
+            <div>
+              {blog.user.name}
+            </div>
+          </>:
+          <>
+          </>
+      }
     </div>
   )
 }
